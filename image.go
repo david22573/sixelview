@@ -1,14 +1,18 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"os"
 
 	"github.com/mattn/go-sixel"
 	"golang.org/x/image/draw"
 )
 
-// loadImage opens and decodes an image file into image.Image.
 func loadImage(path string) (image.Image, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -23,7 +27,6 @@ func loadImage(path string) (image.Image, error) {
 	return img, nil
 }
 
-// resizeImage rescales src to fit within maxW x maxH pixels while preserving aspect ratio.
 func resizeImage(src image.Image, maxW, maxH int) image.Image {
 	if maxW <= 0 || maxH <= 0 {
 		return src
@@ -40,7 +43,7 @@ func resizeImage(src image.Image, maxW, maxH int) image.Image {
 		scale = scaleH
 	}
 	if scale >= 1.0 {
-		return src // no upscaling
+		return src // don't upscale
 	}
 
 	nw := int(float64(w) * scale)
@@ -51,15 +54,12 @@ func resizeImage(src image.Image, maxW, maxH int) image.Image {
 	return dst
 }
 
-// encodeToSixel writes SIXEL bytes for the provided image to stdout.
 func encodeToSixel(img image.Image) error {
 	if img == nil {
-		return errors.New("nil image")
+		return errors.New("nil image passed to encodeToSixel")
 	}
 
-	enc := sixel.NewEncoder()
-	enc.SetWriter(os.Stdout)
-	// Optionally set palette or dithering here via enc.SetDither(true) etc.
+	enc := sixel.NewEncoder(os.Stdout)
 	if err := enc.Encode(img); err != nil {
 		return fmt.Errorf("sixel encode failed: %w", err)
 	}

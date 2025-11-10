@@ -14,7 +14,7 @@ func cmdView() *cli.Command {
 		ArgsUsage: "<image-path>",
 		Flags: []cli.Flag{
 			&cli.IntFlag{Name: "width", Aliases: []string{"w"}, Usage: "Max width in terminal cells"},
-			&cli.IntFlag{Name: "height", Aliases: []string{"h"}, Usage: "Max height in terminal rows"},
+			&cli.IntFlag{Name: "height", Aliases: []string{"ht"}, Usage: "Max height in terminal rows"},
 		},
 		Action: func(c *cli.Context) error {
 			if c.Args().Len() == 0 {
