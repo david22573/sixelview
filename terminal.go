@@ -24,6 +24,7 @@ func detectSixelSupport() bool {
 		"foot":           true,
 		"mlterm":         true,
 		"wezterm":        true,
+		"tmux-256color": true,
 	}
 	if support[term] {
 		return true
